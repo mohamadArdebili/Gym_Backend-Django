@@ -1,11 +1,10 @@
 from django.db import models
+from base.models import BaseModel
 
 
-class WorkoutGif(models.Model):
+class WorkoutGif(BaseModel):
     """store workouts' gifs and creation date"""
     gif = models.FileField(upload_to="gifs/")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"WorkoutGif Object: {self.id}"
@@ -24,7 +23,7 @@ class ExerciseStatusChoices(models.TextChoices):
 
 
 class ExerciseTypeChoices(models.TextChoices):
-    """choices about what is the type of exercise"""
+    """choices about what is the type of exercises"""
     PUSH_UP = "push_up", "Push Up"
     PULL_UP = "pull_up", "Pull Up"
     PLANK = "plank", "Plank"
@@ -32,7 +31,7 @@ class ExerciseTypeChoices(models.TextChoices):
     CRUNCH = "crunch", "Crunch"
 
 
-class Exercise(models.Model):
+class Exercise(BaseModel):
     """stores exercise which is done by the user"""
     title = models.CharField(max_length=50)
     token = models.UUIDField()
@@ -54,7 +53,7 @@ class Exercise(models.Model):
         return f"Exercise Object: {self.id} - {self.get_status_display()} - {self.get_type_display()}"
 
 
-class Client(models.Model):
+class Client(BaseModel):
     """what client says"""
     # text-related fields
     name = models.CharField(max_length=50)
