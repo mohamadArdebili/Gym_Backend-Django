@@ -3,12 +3,13 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from base.accounts.views import UserCreationView
+from base.accounts.views import UserCreationView, ProfileCreationView
 
 # 127.0.0.1:8000/api/accounts/...
 
 urlpatterns = [
     path("signup/", UserCreationView.as_view(), name="create_user"),
+    path("profile/create/", ProfileCreationView.as_view(), name="create_profile"),
 
     # JWT
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
