@@ -24,7 +24,7 @@ class UserCreationView(GenericAPIView):
     queryset = User.objects.all()
 
     def post(self, request, *args, **kwargs):
-        serialized = self.get_serializer(data=request.data)
+        serialized = self.get_serializer(data=request.data, context={"request": request})
         serialized.is_valid(raise_exception=True)
         user = serialized.save()
         response = generate_token_for_user(user)
