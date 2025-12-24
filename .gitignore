@@ -4,3 +4,4 @@ migrations/
 .idea/
 user_avatar/
 client_avatar/
+.env
