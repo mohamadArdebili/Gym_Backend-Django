@@ -2,6 +2,9 @@ from rest_framework import serializers
 from rest_framework import status
 from base.models import User, Profile
 from base.utils.exceptions import CustomException
+from base.utils.caching import CachingProcedureHandler
+from base.utils.constants import Constant
+from base.utils.emails import EmailHandler
 
 
 class UserCreationSerializer(serializers.ModelSerializer):
@@ -44,3 +47,39 @@ class ProfileCreationSerializer(serializers.ModelSerializer):
             **validated_data
         )
         return profile
+
+
+class LoginRequestSerializer(serializers.Serializer):
+    """ user send email to request for login  """
+    email = serializers.EmailField()
+
+    def validate(self, attrs):
+        """ checking if the email already exists """
+        try:
+            User.objects.get(email=attrs["email"])
+        except User.DoesNotExist:
+            raise CustomException(
+                field="error",
+                detail="User with this email does not exist!",
+                status_code=status.HTTP_401_UNAUTHORIZED
+            )
+        return super().validate(attrs)
+
+    def send_token(self):
+        """ generate token, store in cache and send using email """
+        caching_handler = CachingProcedureHandler()
+        email = self.data["email"]
+        token = caching_handler.generate_token()
+        result = caching_handler.set_key(
+            type=Constant.LOGIN_TYPE_CACHING,
+            email=email,
+            token=token
+        )
+        if not result:
+            raise CustomException(
+                field="error",
+                detail="failed to store token!",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        # sending otp email
+        EmailHandler.send_otp(email=email, token=token)
