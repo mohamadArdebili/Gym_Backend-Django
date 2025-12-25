@@ -3,7 +3,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 
 def generate_token_for_user(user):
-    """ generate access & refresh token for user """
+    """ generate access & refresh token & has_profile for user """
     tokens = RefreshToken.for_user(user)
     update_last_login(sender=None, user=user)
     response = {

@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from base.accounts.serializers import (
     UserCreationSerializer, ProfileCreationSerializer,
-    LoginRequestSerializer,
+    LoginRequestSerializer, VerifyTokenSerializer
 )
 from base.models import User, Profile
 from base.utils.auth import generate_token_for_user
@@ -48,3 +48,14 @@ class LoginRequestView(GenericAPIView):
         serialized.send_token()
         return Response(data="email sent", status=status.HTTP_200_OK)
 
+
+class VerifyTokenView(GenericAPIView):
+    """ verify user token and sent jwt """
+    serializer_class = VerifyTokenSerializer
+
+    def post(self, request, *args, **kwargs):
+        serialized = self.get_serializer(data=request.data)
+        serialized.is_valid(raise_exception=True)
+        user = serialized.get_user()
+        response = generate_token_for_user(user)
+        return Response(data=response, status=status.HTTP_200_OK)

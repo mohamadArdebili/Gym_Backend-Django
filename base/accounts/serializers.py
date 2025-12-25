@@ -50,7 +50,7 @@ class ProfileCreationSerializer(serializers.ModelSerializer):
 
 
 class LoginRequestSerializer(serializers.Serializer):
-    """ user send email to request for login  """
+    """ user sends email to request for login  """
     email = serializers.EmailField()
 
     def validate(self, attrs):
@@ -84,3 +84,38 @@ class LoginRequestSerializer(serializers.Serializer):
             )
         # sending otp email
         email_handler.send_otp(email=email, token=token)
+
+
+class VerifyTokenSerializer(serializers.Serializer):
+    """ get user's token(otp) and validate it """
+    token = serializers.CharField()
+
+    def validate(self, attrs):
+        """ validate user token """
+        caching_handler = CachingProcedureHandler()
+        token = attrs["token"]
+        # checking for key in cache
+        email = caching_handler.get_key(type=Constant.LOGIN_TYPE_CACHING, token=token)
+        if email is None:
+            raise CustomException(
+                field="error",
+                detail="token is not valid!",
+                status_code=status.HTTP_403_FORBIDDEN
+            )
+        # updating validated_data with 'email' key
+        attrs.update({
+            "email": email
+        })
+        return attrs
+
+    def get_user(self):
+        email = self.validated_data["email"]
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise CustomException(
+                field="error",
+                detail="requested user does not exist!",
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+        return user
