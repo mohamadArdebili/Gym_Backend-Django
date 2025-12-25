@@ -3,7 +3,8 @@ from rest_framework.generics import GenericAPIView, CreateAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from base.accounts.serializers import (
-    UserCreationSerializer, ProfileCreationSerializer
+    UserCreationSerializer, ProfileCreationSerializer,
+    LoginRequestSerializer,
 )
 from base.models import User, Profile
 from base.utils.auth import generate_token_for_user
@@ -35,3 +36,15 @@ class ProfileCreationView(CreateAPIView):
     """ create a new profile """
     queryset = Profile
     serializer_class = ProfileCreationSerializer
+
+
+class LoginRequestView(GenericAPIView):
+    """ user sends request to get otp """
+    serializer_class = LoginRequestSerializer
+
+    def post(self, request, *args, **kwargs):
+        serialized = self.get_serializer(data=request.data)
+        serialized.is_valid(raise_exception=True)
+        serialized.send_token()
+        return Response(data="email sent", status=status.HTTP_200_OK)
+

@@ -15,11 +15,11 @@ class CachingProcedureHandler:
     def set_key(self, type, email, token):
         """ store a single key, in cache """
         # cache.set("name": "Ali", 5)
-        return cache.set(f"{type} : {token}", email, self.expiration)
+        return cache.set(f"{type}:{token}", email, self.expiration)
 
     def get_key(self, type, token):
         """ get a key from cache """
-        return cache.get(f"{type} : {token}")
+        return cache.get(f"{type}:{token}")
 
     def generate_token(self):
         """ generate a random token """

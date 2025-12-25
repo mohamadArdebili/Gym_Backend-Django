@@ -68,6 +68,7 @@ class LoginRequestSerializer(serializers.Serializer):
     def send_token(self):
         """ generate token, store in cache and send using email """
         caching_handler = CachingProcedureHandler()
+        email_handler = EmailHandler()
         email = self.data["email"]
         token = caching_handler.generate_token()
         result = caching_handler.set_key(
@@ -82,4 +83,4 @@ class LoginRequestSerializer(serializers.Serializer):
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
         # sending otp email
-        EmailHandler.send_otp(email=email, token=token)
+        email_handler.send_otp(email=email, token=token)
