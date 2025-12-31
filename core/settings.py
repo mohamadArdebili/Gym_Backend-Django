@@ -43,12 +43,16 @@ INSTALLED_APPS = [
     # third-party modules
     'rest_framework',
     'rest_framework_simplejwt',
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    # django-cors-headers module middlewares
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -149,3 +153,6 @@ CACHES = {
         }
     }
 }
+
+# CORS_ALLOW_ALL_ORIGINS must be set to False in deployment
+CORS_ALLOW_ALL_ORIGINS = True
