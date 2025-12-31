@@ -17,10 +17,12 @@ class UserCreationSerializer(serializers.ModelSerializer):
 
 class ProfileCreationSerializer(serializers.ModelSerializer):
     """ create user's-profile serializer """
+    BMI = serializers.FloatField(read_only=True)
+    user = UserCreationSerializer(read_only=True)
 
     class Meta:
         model = Profile
-        fields = ("age", "weight", "height", "avatar", "description")
+        fields = ("age", "weight", "height", "avatar", "description", "user", "BMI")
 
     def validate(self, attrs):
         request = self.context["request"]

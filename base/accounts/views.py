@@ -59,3 +59,16 @@ class VerifyTokenView(GenericAPIView):
         user = serialized.get_user()
         response = generate_token_for_user(user)
         return Response(data=response, status=status.HTTP_200_OK)
+
+
+class UpdateProfileView(GenericAPIView):
+    """ getting & updating user profile data """
+
+    def get(self, request, *args, **kwargs):
+        """return user profile obj"""
+        serialized = ProfileCreationSerializer(
+            instance=request.user.profile,
+            context={"request": request}
+        )
+        return Response(data=serialized.data, status=status.HTTP_200_OK)
+
