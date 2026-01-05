@@ -5,3 +5,4 @@ migrations/
 user_avatar/
 client_avatar/
 .env
+media/
