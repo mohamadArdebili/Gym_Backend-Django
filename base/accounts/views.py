@@ -4,7 +4,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from base.accounts.serializers import (
     UserCreationSerializer, ProfileCreationSerializer,
-    LoginRequestSerializer, VerifyTokenSerializer
+    LoginRequestSerializer, VerifyTokenSerializer,
+    ProfileUpdateSerializer,
 )
 from base.models import User, Profile
 from base.utils.auth import generate_token_for_user
@@ -65,10 +66,28 @@ class UpdateProfileView(GenericAPIView):
     """ getting & updating user profile data """
 
     def get(self, request, *args, **kwargs):
-        """return user profile obj"""
-        serialized = ProfileCreationSerializer(
+        """return user profile-data"""
+        serialized = self.get_serializer(
             instance=request.user.profile,
             context={"request": request}
         )
         return Response(data=serialized.data, status=status.HTTP_200_OK)
 
+    def put(self, request, *args, **kwargs):
+        """update user profile-data"""
+        serialized = self.get_serializer(
+            instance=request.user.profile,
+            data=request.data,
+            partial=True,
+            context={"request": request}
+        )
+        serialized.is_valid(raise_exception=True)
+        serialized.save()
+        return Response(data=serialized.data, status=status.HTTP_200_OK)
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return ProfileCreationSerializer
+
+        elif self.request.method == "PUT":
+            return ProfileUpdateSerializer

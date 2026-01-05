@@ -121,3 +121,47 @@ class VerifyTokenSerializer(serializers.Serializer):
                 status_code=status.HTTP_400_BAD_REQUEST
             )
         return user
+
+
+class UpdateUserDataSerializer(serializers.ModelSerializer):
+    """ update user serializer """
+
+    class Meta:
+        model = User
+        fields = ("first_name", "last_name", "email")
+
+    def run_validation(self, data=...):
+        return data
+
+
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    """ update user & profile data """
+    user = UpdateUserDataSerializer()
+
+    class Meta:
+        model = Profile
+        fields = ("age", "weight", "height", "avatar", "description", "user", "BMI")
+        read_only_fields = ("avatar", "BMI")
+
+    def update(self, instance, validated_data):
+        """ instance <= user's profile-data that's going to be updated """
+        user_data = validated_data.pop("user", None)
+
+        for attr, value in validated_data.items():
+            if value:
+                setattr(instance, attr, value)
+
+        # updating user's BMI
+        weight = validated_data["weight"]
+        height = validated_data["height"]
+        BMI = round(weight / (height / 100) ** 2, 1)
+        instance.BMI = BMI
+        instance.save()
+
+        if user_data is not None:
+            user = instance.user
+            for attr, value in user_data.items():
+                if value:
+                    setattr(user, attr, value)
+            user.save()
+            return instance
