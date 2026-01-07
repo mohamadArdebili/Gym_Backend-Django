@@ -54,7 +54,7 @@ class Exercise(BaseModel):
 
 
 class Client(BaseModel):
-    """what client says"""
+    """what client says (clients' opinion in homepage)"""
     # text-related fields
     name = models.CharField(max_length=50)
     opinion = models.TextField()
