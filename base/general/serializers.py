@@ -37,6 +37,7 @@ class ExerciseListSerializer(serializers.ModelSerializer):
 
 class CreateExerciseSerializer(serializers.ModelSerializer):
     """ serializer for creating new exercise-object from user's input in dashboard-page"""
+
     class Meta:
         model = Exercise
         fields = ("title", "type", "token")
@@ -52,3 +53,15 @@ class CreateExerciseSerializer(serializers.ModelSerializer):
             **validated_data
         )
         return obj
+
+
+class ExerciseUpdateSerializer(serializers.ModelSerializer):
+    """ update exercise """
+    type = serializers.SerializerMethodField("get_type")
+
+    class Meta:
+        model = Exercise
+        fields = ("id", "title", "repeat", "token", "duration", "status", "type", "image")
+
+    def get_type(self, obj):
+        return obj.get_type_display()

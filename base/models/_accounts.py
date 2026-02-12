@@ -35,7 +35,12 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    """main model to store user data"""
+    """
+    main model to store user data
+    **************************
+    AND set AUTH_USER_MODEL in the settings
+    **************************
+    """
     # personal info
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
