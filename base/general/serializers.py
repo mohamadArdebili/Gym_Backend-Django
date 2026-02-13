@@ -57,11 +57,7 @@ class CreateExerciseSerializer(serializers.ModelSerializer):
 
 class ExerciseUpdateSerializer(serializers.ModelSerializer):
     """ update exercise """
-    type = serializers.SerializerMethodField("get_type")
-
     class Meta:
         model = Exercise
         fields = ("id", "title", "repeat", "token", "duration", "status", "type", "image")
 
-    def get_type(self, obj):
-        return obj.get_type_display()
