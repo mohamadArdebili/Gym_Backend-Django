@@ -24,7 +24,7 @@ class ClientGifListView(ListAPIView):
 
 class ExerciseCreateListView(ListCreateAPIView):
     """ list and create exercise-objects """
-    permission_classes = (HasProfile, )
+    permission_classes = (IsAuthenticated, HasProfile, )
 
     def get_queryset(self):
         """ return exercise for each user """
@@ -41,7 +41,7 @@ class ExerciseCreateListView(ListCreateAPIView):
 
 class ExerciseUpdateView(RetrieveUpdateAPIView):
     """ return & update a single exercise object """
-    permission_classes = (HasProfile, )
+    permission_classes = (IsAuthenticated, HasProfile, )
 
     queryset = Exercise.objects.all()
     serializer_class = ExerciseUpdateSerializer

@@ -1,6 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.generics import GenericAPIView, CreateAPIView
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from base.accounts.serializers import (
     UserCreationSerializer, ProfileCreationSerializer,
@@ -65,7 +66,7 @@ class VerifyTokenView(GenericAPIView):
 
 class UpdateProfileView(GenericAPIView):
     """ getting & updating user profile data """
-    permission_classes = (HasProfile, )
+    permission_classes = (IsAuthenticated, HasProfile, )
 
     def get(self, request, *args, **kwargs):
         """return user profile-data"""
