@@ -78,12 +78,12 @@ The Project is a comprehensive gym training platform where users can:
 
 ## 📁 Project Structure
 Gym_Backend-Django/
-├── apps/                  # Django applications
-├── config/               # Project configuration
-├── requirements.txt      # Python dependencies
-├── docker-compose.yml    # Docker services configuration
-├── Dockerfile           # Docker image definition
-└── manage.py            # Django management script
+├── apps/                
+├── config/               
+├── requirements.txt      
+├── docker-compose.yml    
+├── Dockerfile           
+└── manage.py           
 
 ## 🔌 API Endpoints
 
