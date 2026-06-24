@@ -2,6 +2,8 @@
 
 A Django REST Framework-based backend platform that enables users to track their fitness journey and receive AI-powered feedback on exercise form through computer vision analysis.
 
+![Demo of the project](assets/demo.gif)
+
 ## 🎯 Overview
 
 The Project is a comprehensive gym training platform where users can:
